@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Project Report — Demo</title>
+<style>
+body { margin: 0; background: #d9d9d9; font-family: -apple-system, sans-serif; }
+.toolbar {
+  position: sticky; top: 0; z-index: 100; background: #1c2431; color: #fff;
+  padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.toolbar h1 { font-size: 14px; font-weight: 600; margin: 0; }
+.toolbar select { font-size: 13px; padding: 7px 10px; border-radius: 4px; border: 1px solid #444; background: #262f3d; color: #fff; min-width: 260px; }
+.toolbar button {
+  background: #d8be86; color: #1c2431; border: none; border-radius: 4px;
+  padding: 9px 18px; font-weight: 700; font-size: 13px; cursor: pointer;
+}
+.toolbar button:hover { background: #c9a961; }
+#report-warning { display:none; margin: 12px 24px 0; padding: 10px 14px; border: 1px solid rgba(208,128,99,.4); border-radius: 4px; background: rgba(208,128,99,.08); color: #b5573a; font-size: 13px; line-height: 1.5; }
+#report-warning.show { display:block; }
+#report-warning ul { margin: 6px 0 0 18px; padding: 0; }
+.scroll-area { padding: 24px 0 60px; }
+/* ============================================================
+   Property Launch Deck — browser module CSS
+   Ported 1:1 from deck-system/template/style.css + deck.html.j2's
+   inline page CSS. Same class names, same values — keep both in
+   sync if you tweak one.
+
+   FONTS: loaded via Google Fonts CDN below. If dubai-realestate-
+   agent.html needs to work fully offline, swap this @import for
+   base64-embedded @font-face rules instead (ask and I'll generate
+   them — adds ~1.5MB to the file).
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,500&family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
+
+:root {
+  --navy-950: #13213b;
+  --navy-900: #182946;
+  --navy-800: #1c3355;
+  --navy-700: #274468;
+  --gold: #d8be86;
+  --gold-deep: #b5893a;
+  --cream: #f5f2ea;
+  --cream-chip: #ede9de;
+  --cream-line: #ddd3bc;
+  --paper: #ffffff;
+  --ink: #16232f;
+  --ink-soft: #4c5964;
+  --ink-faint: #8993a0;
+  --rule: #e4e2dc;
+}
+
+#deck-report * { box-sizing: border-box; margin: 0; padding: 0; }
+#deck-report { font-family: 'Inter', sans-serif; color: var(--ink); }
+
+/* ---- On-screen preview: pages stacked with a light gap + shadow.
+   Print mode strips this down to exact page boxes (see @media print). ---- */
+#deck-report .page {
+  width: 13.333in;
+  height: 7.5in;
+  position: relative;
+  overflow: hidden;
+  background: var(--paper);
+  margin: 0 auto 24px auto;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.14);
+}
+
+#deck-report .eyebrow {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 10.5pt;
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+}
+#deck-report .eyebrow.on-dark { color: var(--gold); }
+
+#deck-report .footer {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 0.4in;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.45in;
+  font-size: 8pt;
+  color: var(--ink-faint);
+  border-top: 1px solid var(--rule);
+  letter-spacing: 0.4px;
+  background: var(--paper);
+}
+#deck-report .footer .brand { display: flex; align-items: center; gap: 6px; font-weight: 600; color: var(--ink-soft); }
+#deck-report .footer .pageno { font-weight: 600; letter-spacing: 1px; }
+
+#deck-report img.ph, #deck-report div.ph {
+  background: linear-gradient(135deg, #e9e4d8 0%, #ddd6c4 100%);
+  border: 1px dashed #b9ae92;
+  color: #8a7f63;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  font-size: 9pt;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  padding: 0.15in;
+  line-height: 1.4;
+}
+
+#deck-report table { border-collapse: collapse; width: 100%; }
+
+#deck-report .icon-badge {
+  width: 0.5in; height: 0.5in;
+  border-radius: 999px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ===== Page 1 — Cover ===== */
+#deck-report .cover { display: flex; }
+#deck-report .cover .sidebar {
+  width: 5.35in; height: 7.5in; background: var(--navy-950);
+  color: #fff; padding: 0.36in 0.42in 0 0.42in; position: relative;
+}
+#deck-report .cover .hero { flex: 1; height: 7.5in; position: relative; overflow: hidden; background: #dcdcdc; }
+#deck-report .cover .hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+#deck-report .cover .watermark {
+  position: absolute; top: 42%; left: 50%;
+  transform: translate(-50%,-50%) rotate(-32deg);
+  font-family: 'Playfair Display'; font-style: italic; font-weight: 400;
+  font-size: 46pt; color: rgba(255,255,255,0.22);
+  white-space: nowrap; letter-spacing: 1px;
+}
+#deck-report .presented-by { display: flex; align-items: center; gap: 0.15in; margin-bottom: 0.2in; }
+#deck-report .presented-by .avatar {
+  width: 0.56in; height: 0.56in; border-radius: 999px; overflow: hidden;
+  border: 2px solid var(--gold); flex-shrink: 0; background: var(--navy-800);
+}
+#deck-report .presented-by .avatar img { width: 100%; height: 100%; object-fit: cover; }
+#deck-report .presented-by .meta .label { font-size: 7.3pt; letter-spacing: 1.6px; color: #9fb0c4; text-transform: uppercase; font-weight: 600; }
+#deck-report .presented-by .meta .name { font-size: 13.5pt; font-weight: 700; margin-top: 1px; }
+#deck-report .presented-by .meta .handle { font-size: 8.8pt; color: var(--gold); font-weight: 600; display:flex; align-items:center; gap:5px; margin-top: 1px;}
+#deck-report .cover hr.rule { border: none; border-top: 1px solid rgba(255,255,255,0.16); margin: 0.16in 0; }
+#deck-report .cover .tag { color: var(--gold); font-size: 9.5pt; font-weight: 700; letter-spacing: 2.4px; }
+#deck-report .cover .project-name { font-family: 'Playfair Display'; font-style: italic; font-weight: 400; font-size: 52pt; line-height: 1.02; margin: 0.06in 0 0.1in 0; }
+#deck-report .cover .locality { font-size: 12pt; font-weight: 700; letter-spacing: 2.2px; }
+#deck-report .cover .plot { font-family: 'Playfair Display'; font-style: italic; color: #a9b7c9; font-size: 10.5pt; margin-top: 0.05in; }
+#deck-report .cover .stats { margin-top: 0.02in; }
+#deck-report .cover .stat-row { display: flex; align-items: center; gap: 0.16in; padding: 0.105in 0; }
+#deck-report .cover .stat-row .icon-badge { background: var(--navy-800); width: 0.46in; height: 0.46in; }
+#deck-report .cover .stat-row .stat-value { font-size: 14pt; font-weight: 800; line-height: 1.15; }
+#deck-report .cover .stat-row .stat-label { font-size: 8.2pt; color: #a9b7c9; line-height: 1.35; margin-top: 1px; max-width: 3.5in; }
+#deck-report .cover .price-box {
+  margin-top: 0.14in; border: 1px solid var(--gold); border-radius: 3px;
+  padding: 0.13in 0.2in; display: flex; align-items: baseline; justify-content: space-between;
+}
+#deck-report .cover .price-box .label { font-size: 8.4pt; letter-spacing: 1.6px; color: #a9b7c9; font-weight: 700; }
+#deck-report .cover .price-box .value { font-family: 'Playfair Display'; font-weight: 600; font-size: 18pt; color: var(--gold); }
+
+/* ===== Page 2 — Investment case ===== */
+#deck-report .p2 { padding: 0.42in 0.5in 0 0.5in; }
+#deck-report .p2 .headline { font-family:'Playfair Display'; font-weight:600; font-size: 27pt; color: var(--navy-950); }
+#deck-report .p2 .subhead { font-family:'Playfair Display'; font-style: italic; color: var(--ink-soft); font-size: 12.5pt; margin-top: 0.03in; }
+#deck-report .p2 .body { display:flex; gap: 0.4in; margin-top: 0.22in; }
+#deck-report .p2 .col-left { width: 5.9in; flex: 0 0 5.9in; min-width: 0; }
+#deck-report .p2 .col-right { width: 3.55in; flex: 0 0 3.55in; min-width: 0; }
+
+#deck-report .p2 table.unit-table { font-size: 9.3pt; table-layout: fixed; width: 100%; }
+#deck-report .p2 table.unit-table thead th {
+  background: var(--navy-900); color:#fff; font-weight:600; text-align:left;
+  padding: 0.09in 0.12in; font-size: 8.8pt;
+}
+#deck-report .p2 table.unit-table thead th.num, #deck-report .p2 table.unit-table td.num { text-align: right; }
+#deck-report .p2 table.unit-table tbody td { padding: 0.09in 0.12in; border-bottom: 1px solid var(--rule); color: var(--ink); }
+#deck-report .p2 table.unit-table tbody tr.hi { background: var(--cream); }
+#deck-report .p2 table.unit-table tbody tr.hi td:first-child { font-weight: 700; }
+#deck-report .p2 .star { color: var(--gold-deep); }
+#deck-report .p2 .table-foot { font-size: 8pt; font-style: italic; color: var(--ink-faint); margin-top: 0.07in; }
+
+#deck-report .p2 .pp-title { font-size: 9.5pt; font-weight: 800; letter-spacing: 1.6px; margin-top: 0.22in; color: var(--navy-950); }
+#deck-report .p2 .pp-row { display:flex; gap: 0.09in; margin-top: 0.1in; }
+#deck-report .p2 .pp-chip { flex:1; background: var(--cream); border-radius: 3px; text-align:center; padding: 0.11in 0.03in 0.08in; }
+#deck-report .p2 .pp-chip.final { background: var(--gold); }
+#deck-report .p2 .pp-chip .pct { font-weight: 800; font-size: 12.5pt; color: var(--navy-950); }
+#deck-report .p2 .pp-chip .when { font-size: 6.6pt; color: var(--ink-faint); margin-top: 0.02in; }
+#deck-report .p2 .pp-note { font-size: 7.6pt; color: var(--ink-faint); margin-top: 0.08in; }
+
+#deck-report .p2 .metrics-row { display:flex; gap: 0.22in; margin-top: 0.2in; }
+#deck-report .p2 .metric-box { flex:1; background: var(--cream); border-radius: 3px; padding: 0.16in 0.18in; }
+#deck-report .p2 .metric-box .val { font-family:'Playfair Display'; font-weight:700; font-size: 20pt; color: var(--navy-950); }
+#deck-report .p2 .metric-box .lbl { font-size: 7.6pt; color: var(--ink-soft); margin-top: 0.03in; line-height:1.35; }
+#deck-report .p2 .trend-box { flex:1.3; }
+#deck-report .p2 .trend-title { font-size: 7.6pt; color: var(--ink-soft); text-align:right; margin-bottom: 0.04in; }
+
+#deck-report .p2 .side-panel { background: var(--navy-950); color:#fff; border-radius: 4px; padding: 0.22in 0.24in 0.2in; }
+#deck-report .p2 .side-panel .title { font-family:'Playfair Display'; font-weight:700; font-size: 15.5pt; line-height:1.3; margin-top: 0.06in; }
+#deck-report .p2 .side-panel .fig { margin-top: 0.14in; border-radius: 3px; overflow:hidden; }
+#deck-report .p2 .side-panel .fig img { width:100%; display:block; }
+#deck-report .p2 .side-panel .cap { font-size: 7.3pt; font-style: italic; color: #9fb0c4; margin-top: 0.06in; }
+#deck-report .p2 .side-panel .hl { font-size: 9pt; line-height: 1.5; margin-top: 0.16in; color: #dbe3ec; }
+#deck-report .p2 .side-panel .hl b { color: var(--gold); }
+#deck-report .p2 .side-panel .note { font-size: 8.3pt; line-height: 1.5; color: #9fb0c4; margin-top: 0.14in; padding-top:0.14in; border-top: 1px solid rgba(255,255,255,0.16); }
+#deck-report .p2 .note b { color: #fff; }
+
+/* ===== Page 3 — Masterplan / Districts ===== */
+#deck-report .p3-hero {
+  height: 1.7in; position: relative; overflow: hidden;
+  background: linear-gradient(135deg, #384457 0%, #1c2431 100%);
+  color: #fff; display:flex; flex-direction:column; justify-content:center;
+  padding: 0 0.5in;
+}
+#deck-report .p3-hero img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; }
+#deck-report .p3-hero .scrim { position:absolute; inset:0; background: linear-gradient(90deg, rgba(12,17,26,0.72) 0%, rgba(12,17,26,0.42) 65%, rgba(12,17,26,0.5) 100%); z-index:1; }
+#deck-report .p3-hero .inner { position:relative; z-index:2; max-width: 9in; }
+#deck-report .p3-hero .eyebrow { color: #cfd8e3; }
+#deck-report .p3-hero h1 { font-family:'Playfair Display'; font-weight:700; font-size: 21pt; line-height:1.28; margin-top: 0.06in; }
+#deck-report .p3-hero .brandmark {
+  position:absolute; top:0.26in; right:0.5in; z-index:2;
+  display:flex; align-items:center; gap:0.08in; color:#fff; font-weight:700; font-size:9.5pt;
+}
+#deck-report .p3-hero .brandmark .dot {
+  width:0.28in; height:0.28in; border-radius:5px; background: var(--gold);
+  display:flex; align-items:center; justify-content:center; color: var(--navy-950); font-family:'Playfair Display'; font-weight:700; font-size:11pt;
+}
+
+#deck-report .p3-body { padding: 0.2in 0.5in 0 0.5in; }
+#deck-report .p3 .cols { display:flex; gap: 0.4in; }
+#deck-report .p3 .col-map { flex: 0 0 3.5in; min-width: 0; }
+#deck-report .p3 .col-jewels { flex: 1; min-width: 0; }
+#deck-report .p3 .map-img { height: 1.25in; border-radius: 3px; overflow:hidden; border: 1px solid var(--rule); }
+#deck-report .p3 .map-img img { width:100%; height:100%; object-fit:cover; display:block; }
+#deck-report .p3 .districts-title { font-family:'Playfair Display'; font-weight:700; font-size: 14.5pt; color: var(--navy-950); margin-top: 0.13in; }
+#deck-report .p3 .districts-body { font-size: 8.4pt; color: var(--ink-soft); line-height: 1.5; margin-top: 0.05in; }
+#deck-report .p3 .live-today { font-size: 8.2pt; color: var(--ink); margin-top: 0.1in; }
+#deck-report .p3 .live-today b { font-weight:700; }
+#deck-report .p3 .note-gold { font-size: 8.2pt; color: var(--gold-deep); font-weight: 700; margin-top: 0.04in; }
+
+#deck-report .p3 .jewels-intro { font-size: 8.6pt; color: var(--ink-soft); line-height: 1.5; margin-top: 0.05in; }
+#deck-report .p3 .jewels-grid { display:grid; grid-template-columns: repeat(3, 1fr); row-gap: 0.13in; column-gap: 0.2in; margin-top: 0.16in; }
+#deck-report .p3 .jewel-item { display:flex; align-items:center; gap: 0.09in; font-size: 9.5pt; font-weight: 600; color: var(--navy-950); }
+#deck-report .p3 .jewel-item svg { flex-shrink:0; }
+
+#deck-report .p3 .district-cards { display:flex; gap: 0.22in; margin-top: 0.15in; }
+#deck-report .p3 .district-card { flex:1; background: var(--cream); border-radius: 3px; padding: 0.12in 0.16in; min-width:0; }
+#deck-report .p3 .district-card h4 { font-size: 8.6pt; font-weight: 800; letter-spacing: 1px; color: var(--gold-deep); }
+#deck-report .p3 .district-card p { font-size: 8pt; color: var(--ink-soft); line-height: 1.45; margin-top: 0.05in; }
+
+#deck-report .p3 .around-title { font-size: 9.5pt; font-weight:800; letter-spacing:1.6px; color: var(--navy-950); margin-top: 0.13in; }
+#deck-report .p3 .around-row { display:flex; gap: 0.45in; margin-top: 0.08in; align-items:center; }
+#deck-report .p3 .around-item { display:flex; align-items:center; gap: 0.12in; }
+#deck-report .p3 .around-item .badge { width:0.42in; height:0.42in; border-radius:999px; background:var(--cream); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+#deck-report .p3 .around-item .num { font-weight: 800; font-size: 15pt; color: var(--navy-950); line-height:1; }
+#deck-report .p3 .around-item .lbl { font-size: 7.4pt; color: var(--ink-soft); margin-top:1px; max-width: 1.7in; line-height:1.3; white-space: nowrap; }
+#deck-report .p3 .around-caption { font-size: 7.4pt; font-style: italic; color: var(--ink-faint); margin-top: 0.1in; }
+
+/* ===== Page 4 — Comparables ===== */
+#deck-report .p4 { padding: 0.42in 0.5in 0 0.5in; }
+#deck-report .p4 .headline { font-family:'Playfair Display'; font-weight:600; font-size: 25pt; color: var(--navy-950); }
+#deck-report .p4 .subhead { font-family:'Playfair Display'; font-style: italic; color: var(--ink-soft); font-size: 11.5pt; margin-top: 0.03in; }
+#deck-report .p4 .body { display:flex; gap: 0.4in; margin-top: 0.2in; }
+#deck-report .p4 .col-left { flex: 0 0 5.9in; min-width: 0; }
+#deck-report .p4 .col-right { flex: 0 0 3.55in; min-width: 0; }
+
+#deck-report .p4 table.comp-table { font-size: 9.2pt; table-layout: fixed; width:100%; }
+#deck-report .p4 table.comp-table thead th { background: var(--navy-900); color:#fff; font-weight:600; text-align:left; padding: 0.09in 0.14in; font-size: 8.6pt; }
+#deck-report .p4 table.comp-table tbody td { padding: 0.1in 0.14in; border-bottom: 1px solid var(--rule); color: var(--ink); }
+#deck-report .p4 table.comp-table tbody tr.hi td { background: var(--navy-950); color: #fff; font-weight: 700; }
+#deck-report .p4 table.comp-table tbody tr.hi td.val { color: var(--gold); font-family:'Playfair Display'; font-size: 12pt; }
+#deck-report .p4 table.comp-table td.num { text-align:center; }
+
+#deck-report .p4 .table-note { font-size: 7.8pt; font-style: italic; color: var(--ink-faint); margin-top: 0.09in; }
+
+#deck-report .p4 .bar-title { font-size: 9.3pt; font-weight: 800; letter-spacing: 1.4px; color: var(--navy-950); margin-top: 0.2in; }
+#deck-report .p4 .bar-chart { margin-top: 0.08in; }
+
+#deck-report .p4 .calc-block { margin-top: 0.13in; padding: 0.1in 0.14in; border: 1px solid var(--cream-line); border-left: 3px solid var(--gold-deep); border-radius: 3px; background: var(--cream); }
+#deck-report .p4 .calc-label { font-size: 6.8pt; font-weight: 800; letter-spacing: 1.2px; color: var(--gold-deep); }
+#deck-report .p4 .calc-headline { font-family:'Playfair Display'; font-weight:700; font-size: 12pt; color: var(--navy-950); margin-top: 0.02in; }
+#deck-report .p4 .calc-sub { font-size: 7.6pt; color: var(--ink-soft); margin-top: 0.01in; }
+#deck-report .p4 .calc-note { font-size: 7pt; color: var(--ink-faint); line-height: 1.35; margin-top: 0.05in; }
+
+#deck-report .p4 .opp-panel { background: var(--cream); border-radius: 4px; padding: 0.24in 0.26in; }
+#deck-report .p4 .opp-panel .eyebrow { margin-top: 0; }
+#deck-report .p4 .opp-stat { margin-top: 0.16in; }
+#deck-report .p4 .opp-stat:first-of-type { margin-top: 0.14in; }
+#deck-report .p4 .opp-stat .num { font-family:'Playfair Display'; font-weight: 700; font-size: 25pt; color: var(--navy-950); line-height:1; }
+#deck-report .p4 .opp-stat .body { font-size: 8.4pt; color: var(--ink-soft); line-height: 1.5; margin-top: 0.06in; }
+#deck-report .p4 .opp-rule { border:none; border-top: 1px solid var(--cream-line); margin: 0.18in 0; }
+#deck-report .p4 .opp-note { font-size: 8.4pt; color: var(--ink-soft); line-height: 1.55; }
+#deck-report .p4 .opp-note b { color: var(--navy-950); }
+
+/* ===== Page 5 — Location & Lifestyle ===== */
+#deck-report .p5 { padding: 0.4in 0.5in 0 0.5in; }
+#deck-report .p5 .headline { font-family:'Playfair Display'; font-weight:600; font-size: 25pt; color: var(--navy-950); }
+#deck-report .p5 .subhead { font-family:'Playfair Display'; font-style: italic; color: var(--ink-soft); font-size: 11.5pt; margin-top: 0.03in; }
+
+#deck-report .p5 .hero-imgs { display:flex; gap: 0.22in; margin-top: 0.18in; }
+#deck-report .p5 .mall-col { flex: 0 0 7.1in; min-width:0; }
+#deck-report .p5 .map-col { flex: 1; min-width: 0; }
+#deck-report .p5 .mall-img, #deck-report .p5 .map-img { height: 1.7in; border-radius: 3px; overflow:hidden; position:relative; border: 1px solid var(--rule); }
+#deck-report .p5 .mall-img img, #deck-report .p5 .map-img img { width:100%; height:100%; object-fit:cover; display:block; }
+#deck-report .p5 .mall-img .cap {
+  position:absolute; left:0; right:0; bottom:0; background: rgba(12,17,26,0.74); color:#fff;
+  font-size: 8.4pt; font-style: italic; padding: 0.07in 0.15in;
+}
+#deck-report .p5 .mall-stats { display:flex; gap: 0.5in; margin-top: 0.15in; }
+#deck-report .p5 .mall-stats .stat .val { font-family:'Playfair Display'; font-weight:700; font-size: 16pt; color: var(--gold-deep); }
+#deck-report .p5 .mall-stats .stat .lbl { font-size: 7.6pt; color: var(--ink-soft); margin-top:1px; }
+#deck-report .p5 .map-caption { font-size: 7.6pt; font-style: italic; color: var(--ink-faint); margin-top: 0.08in; }
+
+#deck-report .p5 .bottom-band { display:flex; gap: 0.3in; margin-top: 0.16in; }
+#deck-report .p5 .nearby-panel { flex:1; background: var(--cream); border-radius: 4px; padding: 0.14in 0.22in; min-width:0; }
+#deck-report .p5 .nearby-item { display:flex; align-items:center; gap: 0.14in; padding: 0.05in 0; }
+#deck-report .p5 .nearby-item .badge { width:0.36in; height:0.36in; border-radius:999px; background:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+#deck-report .p5 .nearby-item .txt { font-size: 9.3pt; color: var(--ink); }
+#deck-report .p5 .nearby-item .txt b { color: var(--navy-950); font-weight:800; }
+#deck-report .p5 .contact-card {
+  flex: 0 0 2.9in; border: 1px solid var(--rule); border-radius: 4px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+  padding: 0.2in;
+}
+#deck-report .p5 .contact-card .avatar { width:0.75in; height:0.75in; border-radius:999px; overflow:hidden; border:2px solid var(--gold); background: var(--navy-800); }
+#deck-report .p5 .contact-card .avatar img { width:100%; height:100%; object-fit:cover; }
+#deck-report .p5 .contact-card .name { font-weight:800; font-size: 11.5pt; color: var(--navy-950); margin-top: 0.1in; }
+#deck-report .p5 .contact-card .sub { font-size: 8.4pt; color: var(--ink-soft); margin-top: 0.03in; }
+
+/* ===== Page 6 — Investment Returns ===== */
+#deck-report .p6 { padding: 0.42in 0.5in 0 0.5in; }
+#deck-report .p6 .headline { font-family:'Playfair Display'; font-weight:600; font-size: 25pt; color: var(--navy-950); }
+#deck-report .p6 .subhead { font-family:'Playfair Display'; font-style: italic; color: var(--ink-soft); font-size: 11.5pt; margin-top: 0.03in; }
+#deck-report .p6 .body { display:flex; gap: 0.4in; margin-top: 0.2in; }
+#deck-report .p6 .col-left { flex: 0 0 5.9in; min-width: 0; }
+#deck-report .p6 .col-right { flex: 0 0 3.55in; min-width: 0; }
+
+#deck-report .p6 table.yield-table { font-size: 9.2pt; table-layout: fixed; width:100%; }
+#deck-report .p6 table.yield-table thead th { background: var(--navy-900); color:#fff; font-weight:600; text-align:left; padding: 0.09in 0.14in; font-size: 8.6pt; }
+#deck-report .p6 table.yield-table thead th.num { text-align:right; }
+#deck-report .p6 table.yield-table tbody td { padding: 0.1in 0.14in; border-bottom: 1px solid var(--rule); color: var(--ink); }
+#deck-report .p6 table.yield-table tbody tr.hi td { background: var(--cream); font-weight:700; }
+#deck-report .p6 table.yield-table td.num { text-align:right; }
+#deck-report .p6 .yield-note { font-size: 7.8pt; font-style: italic; color: var(--ink-faint); margin-top: 0.09in; }
+
+#deck-report .p6 .scenario-title { font-size: 9.3pt; font-weight: 800; letter-spacing: 1.4px; color: var(--navy-950); margin-top: 0.24in; }
+#deck-report .p6 .scenario-cards { display:flex; gap: 0.16in; margin-top: 0.11in; }
+#deck-report .p6 .scenario-card { flex:1; background: var(--cream); border-radius: 3px; padding: 0.15in 0.16in; min-width:0; }
+#deck-report .p6 .scenario-card.hi { background: var(--navy-950); }
+#deck-report .p6 .scenario-card .lbl { font-size: 8pt; font-weight:800; letter-spacing:0.6px; color: var(--gold-deep); text-transform:uppercase; }
+#deck-report .p6 .scenario-card.hi .lbl { color: var(--gold); }
+#deck-report .p6 .scenario-card .cagr { font-size: 7.6pt; color: var(--ink-faint); margin-top:2px; }
+#deck-report .p6 .scenario-card.hi .cagr { color: #9fb0c4; }
+#deck-report .p6 .scenario-card .val { font-family:'Playfair Display'; font-weight:700; font-size: 15pt; color: var(--navy-950); margin-top: 0.1in; }
+#deck-report .p6 .scenario-card.hi .val { color: #fff; }
+#deck-report .p6 .scenario-card .gain { font-size: 8pt; color: var(--ink-soft); margin-top: 0.02in; }
+#deck-report .p6 .scenario-card.hi .gain { color: #cfe0d4; }
+#deck-report .p6 .appreciation-note { font-size: 7.8pt; font-style: italic; color: var(--ink-faint); margin-top: 0.1in; }
+
+#deck-report .p6 .exit-panel { background: var(--navy-950); color:#fff; border-radius: 4px; padding: 0.22in 0.24in 0.2in; }
+#deck-report .p6 .exit-panel .title { font-family:'Playfair Display'; font-weight:700; font-size: 14.5pt; line-height:1.3; margin-top: 0.06in; }
+#deck-report .p6 .exit-row { display:flex; justify-content:space-between; gap:0.1in; padding: 0.085in 0; border-bottom: 1px solid rgba(255,255,255,0.14); font-size: 9pt; }
+#deck-report .p6 .exit-row:last-of-type { border-bottom:none; }
+#deck-report .p6 .exit-row .k { color:#c3cddb; }
+#deck-report .p6 .exit-row .v { font-weight:700; text-align:right; flex-shrink:0; }
+#deck-report .p6 .exit-row.hi .v { color: var(--gold); font-family:'Playfair Display'; font-size: 12pt; }
+#deck-report .p6 .exit-note { font-size: 8.3pt; line-height: 1.5; color: #9fb0c4; margin-top: 0.15in; padding-top:0.13in; border-top: 1px solid rgba(255,255,255,0.16); }
+#deck-report .p6 .exit-note b { color: #fff; }
+
+/* ============================================================
+   Print / PDF export
+   Chrome's "Save as PDF" respects @page size exactly, so the
+   printed PDF comes out at true 13.333x7.5in per page with real
+   vector text (not a rasterized screenshot).
+   ============================================================ */
+@media print {
+  @page { size: 13.333in 7.5in; margin: 0; }
+  html, body { background: #fff !important; }
+  /* Hide everything that isn't the report itself. #deck-report stays in
+     normal document flow (no position:absolute) so its 5 .page children
+     paginate the ordinary way — more reliably across print/PDF engines
+     than the old hide-and-reposition trick this block used to use.
+     If embedding this CSS in an app shell, add that shell's chrome
+     selectors (nav bars, headers, toolbars) to the hide-list below. */
+  #deck-report .page {
+    margin: 0; box-shadow: none;
+    break-after: page; page-break-after: always;
+  }
+  #deck-report .page:last-child { break-after: avoid; page-break-after: avoid; }
+  .no-print { display: none !important; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="toolbar no-print">
+  <h1>Project Report — demo (Valia has 6 pages incl. Investment Returns; Farm Gardens is a deliberately incomplete 5-page example)</h1>
+  <select id="report-project-select"></select>
+  <button onclick="window.print()">Download PDF</button>
+</div>
+<div id="report-warning" class="no-print"></div>
+
+<div class="scroll-area">
+  <div id="deck-report"></div>
+</div>
+
+<script>
+// Hand-drawn line icon set (24x24 viewBox), stroke-based — ported 1:1 from
+// the Python deck-system's template/icons.py so both stay visually identical.
+const ICONS = (() => {
+  const wrap = (body, { color = "#ffffff", size = 20, sw = 1.6 } = {}) =>
+    `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="${color}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round">${body}</svg>`;
+
+  const bodies = {
+    layers: '<path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="M2 13l10 5 10-5"/><path d="M2 18l10 5 10-5"/>',
+    building: '<rect x="6" y="2.5" width="12" height="19" rx="0.6"/><path d="M9 6.2h1.4M13.6 6.2H15M9 9.6h1.4M13.6 9.6H15M9 13h1.4M13.6 13H15"/><rect x="10" y="16.3" width="4" height="5.2"/>',
+    metro: '<path d="M6.5 3.5h11a2 2 0 0 1 2 2V15a3 3 0 0 1-3 3H7.5a3 3 0 0 1-3-3V5.5a2 2 0 0 1 2-2Z"/><path d="M4.5 15h15"/><rect x="7" y="6" width="4.2" height="4" rx="0.4"/><rect x="12.8" y="6" width="4.2" height="4" rx="0.4"/><path d="M8 21l-2 2M16 21l2 2"/>',
+    calendar: '<rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M3.5 10h17"/><path d="M8 3v4M16 3v4"/><path d="M8 14h2M14 14h2M8 17.5h2M14 17.5h2"/>',
+    pin: '<path d="M12 21s7-6.1 7-11.3A7 7 0 0 0 5 9.7C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.6" r="2.3"/>',
+    heart: '<path d="M12 20.5s-7.6-4.6-10-9.3C.5 7.8 2.3 4.5 5.8 4c2-.3 3.9.6 5 2.2C11.9 4.6 13.8 3.7 15.8 4c3.5.5 5.3 3.8 3.9 7.2-2.4 4.7-10 9.3-10 9.3Z"/>',
+    grad_cap: '<path d="M2 9.5 12 5l10 4.5-10 4.5-10-4.5Z"/><path d="M6.5 11.7v4.4c0 1.4 2.5 2.9 5.5 2.9s5.5-1.5 5.5-2.9v-4.4"/><path d="M20 9.5v6"/>',
+    hotel: '<path d="M3 21V8l6-4 6 4v13"/><path d="M15 21V11l6-2v12"/><path d="M9 21v-5h0"/><path d="M6.5 9h1M6.5 12h1M6.5 15h1M11.5 9h1M11.5 12h1"/>',
+    walk: '<circle cx="13" cy="4.5" r="1.7"/><path d="M10 22l1.5-6-2-2 .8-5 3-1.2 2.8 2.5 3 1"/><path d="M9.3 14.2 6 16.5"/>',
+    bike: '<circle cx="6" cy="17" r="3.2"/><circle cx="18" cy="17" r="3.2"/><path d="M6 17l4-9h4l3 9"/><path d="M10 8h3M11 8l3 5h4"/>',
+    tree: '<path d="M12 3 7 10h3l-4 6h4v5h4v-5h4l-4-6h3L12 3Z"/>',
+    mall: '<path d="M4 9 12 4l8 5"/><rect x="4" y="9" width="16" height="12" rx="1"/><path d="M9 21v-6h6v6"/><path d="M4 13h16"/>',
+  };
+
+  const api = {};
+  for (const [name, body] of Object.entries(bodies)) {
+    api[name] = (opts) => wrap(body, opts);
+  }
+  return api;
+})();
+
+if (typeof module !== "undefined") module.exports = ICONS;
+
+</script>
+<script>
+// SVG chart generators — ported 1:1 from template/charts.py.
+
+function lineTrend(points, { width = 300, height = 90, color = "#c9a15a", axisColor = "#8993a0" } = {}) {
+  const n = points.length;
+  if (n < 2) return "";
+  const padL = 26, padR = 26, padT = 22, padB = 18;
+  const plotW = width - padL - padR;
+  const plotH = height - padT - padB;
+  const vals = points.map((p) => p.value);
+  const vmin = Math.min(...vals);
+  const vmax = Math.max(...vals);
+  const vspan = (vmax - vmin) || 1;
+  const xs = points.map((_, i) => padL + (i / (n - 1)) * plotW);
+  const ys = vals.map((v) => padT + plotH - ((v - vmin) / vspan) * plotH);
+
+  const path = xs.map((x, i) => `${i === 0 ? "M" : "L"} ${x.toFixed(1)} ${ys[i].toFixed(1)}`).join(" ");
+  const dots = xs.map((x, i) => `<circle cx="${x.toFixed(1)}" cy="${ys[i].toFixed(1)}" r="2.6" fill="${color}"/>`).join("");
+  const anchors = n > 2 ? ["start", ...Array(n - 2).fill("middle"), "end"] : ["start", "end"];
+  const labelsV = xs
+    .map((x, i) => `<text x="${x.toFixed(1)}" y="${(ys[i] - 8).toFixed(1)}" font-size="9" font-weight="700" fill="#16232f" text-anchor="${anchors[i]}" font-family="Inter">${vals[i].toLocaleString()}</text>`)
+    .join("");
+  const labelsX = xs
+    .map((x, i) => `<text x="${x.toFixed(1)}" y="${height - 4}" font-size="7.6" fill="${axisColor}" text-anchor="${anchors[i]}" font-family="Inter">${points[i].label}</text>`)
+    .join("");
+
+  return `<svg viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg"><path d="${path}" fill="none" stroke="${color}" stroke-width="2"/>${dots}${labelsV}${labelsX}</svg>`;
+}
+
+function barH(items, { width = 380, rowH = 26, color = "#13213b", track = "#ede9de", highlightColor = "#c9a15a" } = {}) {
+  const n = items.length;
+  const height = n * rowH;
+  const vmax = Math.max(...items.map((i) => i.value)) || 1;
+  const labelW = 78, valW = 46;
+  const barMax = width - labelW - valW - 8;
+
+  const rows = items
+    .map((item, i) => {
+      const y = i * rowH;
+      const bw = Math.max(4, (item.value / vmax) * barMax);
+      const fill = item.highlight ? highlightColor : color;
+      const display = item.display ?? item.value;
+      return (
+        `<text x="0" y="${y + rowH / 2 + 3}" font-size="9.5" fill="#16232f" font-family="Inter" font-weight="600">${item.label}</text>` +
+        `<rect x="${labelW}" y="${(y + rowH * 0.22).toFixed(1)}" width="${barMax}" height="${(rowH * 0.56).toFixed(1)}" rx="2" fill="${track}"/>` +
+        `<rect x="${labelW}" y="${(y + rowH * 0.22).toFixed(1)}" width="${bw.toFixed(1)}" height="${(rowH * 0.56).toFixed(1)}" rx="2" fill="${fill}"/>` +
+        `<text x="${labelW + barMax + 8}" y="${y + rowH / 2 + 3}" font-size="9.5" fill="#16232f" font-family="Inter" font-weight="700">${display}</text>`
+      );
+    })
+    .join("");
+
+  return `<svg viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">${rows}</svg>`;
+}
+
+if (typeof module !== "undefined") module.exports = { lineTrend, barH };
+
+</script>
+<script>
+// ============================================================
+// CALC / VALIDATE — the analytical layer between raw project data
+// and the renderer. Nothing here is presentation logic; it only
+// computes numbers and flags data problems. Pure functions, no DOM.
+//
+// Design principle (per the spec this was built against): keep a
+// hard line between
+//   SOURCE data      — what the project data literally states
+//   CALCULATED data  — arithmetic on source data (psf, % diff)
+//   ANALYSIS         — a conclusion drawn from calculated data
+//   ASSUMPTION       — anything modeled/estimated, always labeled
+// The renderer is responsible for labeling calculated/analysis
+// content as such when it displays it — this file just produces
+// the numbers and never invents one it can't derive from the data.
+// ============================================================
+
+function toNumber(v) {
+  if (typeof v === "number") return v;
+  if (!v) return null;
+  const s = String(v).trim();
+  // Handle "AED 2.14M" / "2.14M" / "AED 1.97 Million" style magnitude
+  // suffixes explicitly — a naive digit-strip would silently turn
+  // "2.14M" into 2.14 and be wrong by six orders of magnitude.
+  const m = s.match(/([\d,.]+)\s*(million|m\b|k\b|thousand)?/i);
+  if (!m) return null;
+  let n = parseFloat(m[1].replace(/,/g, ""));
+  if (!Number.isFinite(n)) return null;
+  const suffix = (m[2] || "").toLowerCase();
+  if (suffix.startsWith("m")) n *= 1_000_000;
+  else if (suffix.startsWith("k") || suffix.startsWith("t")) n *= 1_000;
+  return n;
+}
+
+/**
+ * Per-unit-type metrics derived from the unit table. Prefers explicit
+ * numeric fields (avgPriceNum, sizeAvgNum, startingNum) when the data
+ * provides them — those are unambiguous. Falls back to parsing the
+ * display strings (starting/average/size) only when numeric fields
+ * are absent, via the magnitude-aware parser above.
+ */
+function computeUnitMetrics(unitTable) {
+  return (unitTable || []).map((u) => {
+    const price = toNumber(u.avgPriceNum) ?? toNumber(u.average) ?? toNumber(u.startingNum) ?? toNumber(u.starting);
+    const size = toNumber(u.sizeAvgNum) ?? toNumber(u.sizeMinNum) ?? toNumber(u.size);
+    const psf = price && size ? price / size : null;
+    return {
+      type: u.type,
+      units: u.units,
+      price,
+      size,
+      psf,
+      psfDisplay: psf ? `AED ${Math.round(psf).toLocaleString()}` : "Data unavailable",
+    };
+  });
+}
+
+/**
+ * Best-value scoring across unit types. Lower AED/sq ft and larger
+ * average size both score positively; entry price is scored inverse
+ * (more accessible = higher score) but weighted lightly, since it's
+ * a secondary consideration relative to actual value-for-money.
+ * Weights are a plain constant, not hidden magic numbers — change
+ * them here if the investment thesis for a project calls for it.
+ */
+const DEFAULT_SCORE_WEIGHTS = { psf: 0.55, size: 0.25, entryPrice: 0.20 };
+
+function computeBestUnit(unitTable, weights = DEFAULT_SCORE_WEIGHTS) {
+  const metrics = computeUnitMetrics(unitTable);
+  const scoreable = metrics.filter((m) => m.psf && m.size && m.price);
+  if (scoreable.length < 2) {
+    return { metrics, winner: null, reason: "Not enough priced unit types to compare." };
+  }
+
+  const psfVals = scoreable.map((m) => m.psf);
+  const sizeVals = scoreable.map((m) => m.size);
+  const priceVals = scoreable.map((m) => m.price);
+  const norm = (v, arr, invert) => {
+    const min = Math.min(...arr), max = Math.max(...arr);
+    if (max === min) return 0.5;
+    const n = (v - min) / (max - min);
+    return invert ? 1 - n : n;
+  };
+
+  let winner = null, bestScore = -Infinity;
+  for (const m of scoreable) {
+    const score =
+      norm(m.psf, psfVals, true) * weights.psf +
+      norm(m.size, sizeVals, false) * weights.size +
+      norm(m.price, priceVals, true) * weights.entryPrice;
+    m.score = score;
+    if (score > bestScore) { bestScore = score; winner = m; }
+  }
+
+  return { metrics, winner, weights };
+}
+
+/**
+ * District/market premium-discount, computed only when both sides
+ * of the comparison exist in source data. Returns null (not a
+ * fabricated %) if district average psf is missing.
+ */
+function computeDistrictComparison(projectPsf, districtAvgPsf) {
+  const p = toNumber(projectPsf);
+  const d = toNumber(districtAvgPsf);
+  if (!p || !d) return null;
+  const diffPct = ((d - p) / d) * 100;
+  return {
+    projectPsf: p,
+    districtAvgPsf: d,
+    diffPct: Math.round(diffPct * 10) / 10,
+    direction: diffPct > 0 ? "below" : "above",
+    display: `${Math.abs(Math.round(diffPct * 10) / 10)}% ${diffPct > 0 ? "below" : "above"} district average`,
+  };
+}
+
+/**
+ * Payment plan validation. Arbitrary number of instalments, any
+ * split (20/80, 60/40, 9-tranche construction-linked, whatever).
+ * Auto-identifies the final instalment rather than requiring a
+ * hand-set flag, and flags the plan if it doesn't sum to 100%.
+ */
+function validatePaymentPlan(plan) {
+  if (!Array.isArray(plan) || plan.length === 0) {
+    return { valid: false, total: 0, warning: "No payment plan data provided." };
+  }
+  const total = plan.reduce((sum, p) => sum + (toNumber(p.pct) ?? 0), 0);
+  const rounded = Math.round(total * 10) / 10;
+  const valid = Math.abs(rounded - 100) < 0.1;
+  return {
+    valid,
+    total: rounded,
+    warning: valid ? null : `Payment plan instalments sum to ${rounded}%, not 100% — check the source data before sending this report out.`,
+  };
+}
+
+/**
+ * Full project-data validation. Returns a list of human-readable
+ * warnings; an empty list means the report is safe to render and
+ * export as-is. Never throws — a malformed project should degrade
+ * to "here's what's wrong," not a broken page.
+ */
+function validateProjectData(data) {
+  const warnings = [];
+  const req = (val, label) => { if (!val) warnings.push(`Missing ${label}.`); };
+
+  req(data?.project?.name, "project name");
+  req(data?.project?.location, "location");
+  req(data?.agent?.name, "presenter name");
+
+  const units = data?.page2?.unit_table;
+  if (!units || units.length === 0) {
+    warnings.push("No unit types defined — pages 2 and 4 will show as empty.");
+  } else {
+    units.forEach((u, i) => {
+      if (!u.type) warnings.push(`Unit row ${i + 1} is missing a type label.`);
+      if (!u.starting && !u.average) warnings.push(`"${u.type || "Unit row " + (i + 1)}" has no price data.`);
+    });
+  }
+
+  const pp = validatePaymentPlan(data?.page2?.payment_plan);
+  if (pp.warning) warnings.push(pp.warning);
+
+  return { warnings, paymentPlan: pp };
+}
+
+if (typeof module !== "undefined") {
+  module.exports = {
+    toNumber,
+    computeUnitMetrics,
+    computeBestUnit,
+    computeDistrictComparison,
+    validatePaymentPlan,
+    validateProjectData,
+    DEFAULT_SCORE_WEIGHTS,
+  };
+}
+
+</script>
+<script>
+// Renders the 5-page property launch deck as an HTML string, given a data
+// object with the same shape as the Python system's JSON schema.
+// Ported 1:1 from deck-system/template/deck.html.j2 — keep class names in
+// sync with style.css (also ported, see deck-report.css).
+
+if (typeof module !== "undefined") {
+  // Node test harness only — in the browser these come from the
+  // preceding <script> tags as globals (ICONS, lineTrend, barH, and
+  // now the calc.js exports), same pattern as icons/charts already use.
+  var { computeUnitMetrics, computeBestUnit, computeDistrictComparison, validatePaymentPlan, validateProjectData } = require("./calc.js");
+}
+
+function esc(s) {
+  return (s ?? "").toString();
+}
+
+function renderDeck(data) {
+  const { agent, project, page2, page3, page4, page5 } = data;
+  const footerLeft = data.footer_left;
+  const footerBrand = data.footer_brand;
+  const watermark = data.watermark;
+
+  const ph = (label, extraStyle = "") =>
+    `<div class="ph" style="width:100%;height:100%;${extraStyle}">[ Insert: ${label} ]</div>`;
+
+  // ---------- PAGE 1 : COVER ----------
+  const statRows = project.stats
+    .map(
+      (s) => `
+      <div class="stat-row">
+        <div class="icon-badge">${ICONS[s.icon]?.({ color: "#d8be86", size: 20 }) ?? ""}</div>
+        <div>
+          <div class="stat-value">${esc(s.value)}</div>
+          <div class="stat-label">${esc(s.label)}</div>
+        </div>
+      </div>`
+    )
+    .join("");
+
+  const page1 = `
+<div class="page cover">
+  <div class="sidebar">
+    <div class="presented-by">
+      <div class="avatar"><img src="${esc(agent.photo)}"></div>
+      <div class="meta">
+        <div class="label">Presented by</div>
+        <div class="name">${esc(agent.name)}</div>
+        <div class="handle">${esc(agent.handle)}</div>
+      </div>
+    </div>
+    <hr class="rule">
+    <div class="tag">${esc(project.tag)}</div>
+    <div class="project-name">${esc(project.name)}</div>
+    <div class="locality">${esc(project.location).toUpperCase()}</div>
+    <div class="plot">${esc(project.district)}</div>
+    <hr class="rule">
+    <div class="stats">${statRows}</div>
+    <div class="price-box">
+      <div class="label">STARTING FROM</div>
+      <div class="value">${esc(project.starting_price)}</div>
+    </div>
+  </div>
+  <div class="hero">
+    ${project.hero_image ? `<img src="${esc(project.hero_image)}">` : ph("hero render: exterior tower photo/CGI, landscape")}
+    ${watermark ? `<div class="watermark">${esc(watermark)} &nbsp; ${esc(watermark)} &nbsp; ${esc(watermark)}</div>` : ""}
+  </div>
+  <div class="footer">
+    <div>${esc(footerLeft)}</div>
+    <div class="brand">${esc(footerBrand)}</div>
+    <div class="pageno">01 / LAUNCH OVERVIEW</div>
+  </div>
+</div>`;
+
+  // ---------- PAGE 2 : INVESTMENT CASE ----------
+  const unitRows = page2.unit_table
+    .map(
+      (r) => `
+          <tr class="${r.starred ? "hi" : ""}">
+            <td>${esc(r.type)}${r.starred ? ' <span class="star">&#9733;</span>' : ""}</td>
+            <td class="num">${esc(r.units)}</td>
+            <td class="num">${esc(r.size)}</td>
+            <td class="num">${esc(r.starting)}</td>
+            <td class="num">${esc(r.average)}</td>
+            <td class="num">${esc(r.max)}</td>
+          </tr>`
+    )
+    .join("");
+
+  const ppChips = page2.payment_plan
+    .map((p, i) => {
+      const pctDisplay = typeof p.pct === "number" ? `${p.pct}%` : esc(p.pct);
+      const isFinal = p.final || i === page2.payment_plan.length - 1;
+      return `
+        <div class="pp-chip ${isFinal ? "final" : ""}">
+          <div class="pct">${pctDisplay}</div>
+          <div class="when">${esc(p.when)}</div>
+        </div>`;
+    })
+    .join("");
+
+  const page2Html = `
+<div class="page p2">
+  <div class="headline">${esc(page2.headline)}</div>
+  <div class="subhead">${esc(page2.subhead)}</div>
+  <div class="body">
+    <div class="col-left">
+      <table class="unit-table">
+        <colgroup>
+          <col style="width:27%"><col style="width:11%"><col style="width:17%">
+          <col style="width:15%"><col style="width:15%"><col style="width:15%">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Type</th><th class="num">Units</th><th class="num">Size (sq ft)</th>
+            <th class="num">Starting</th><th class="num">Average</th><th class="num">Max</th>
+          </tr>
+        </thead>
+        <tbody>${unitRows}</tbody>
+      </table>
+      <div class="table-foot">${esc(page2.table_foot)}</div>
+
+      <div class="pp-title">PAYMENT PLAN</div>
+      <div class="pp-row">${ppChips}</div>
+      <div class="pp-note">${esc(page2.payment_note)}</div>
+
+      <div class="metrics-row">
+        <div class="metric-box">
+          <div class="val">${esc(page2.market_metric?.value) || "TBC"}</div>
+          <div class="lbl">${esc(page2.market_metric?.label) || "Data unavailable — market sales figures not yet compiled."}</div>
+        </div>
+        <div class="metric-box trend-box">
+          <div class="trend-title">${esc(page2.price_trend?.title)}</div>
+          ${page2.price_trend?.points?.length >= 2 ? lineTrend(page2.price_trend.points, { width: 300, height: 78 }) : `<div style="font-size:7.6pt; color:var(--ink-faint); font-style:italic; padding-top:0.2in;">Data unavailable — not enough price history to chart a trend.</div>`}
+        </div>
+      </div>
+    </div>
+    <div class="col-right">
+      ${
+        page2.differentiator
+          ? `<div class="side-panel">
+        <div class="eyebrow on-dark">${esc(page2.differentiator.eyebrow)}</div>
+        <div class="title">${esc(page2.differentiator.title)}</div>
+        <div class="fig">
+          ${page2.differentiator.image ? `<img src="${esc(page2.differentiator.image)}">` : `<div class="ph" style="height:2.1in;">[ Insert: floor plan / layout diagram ]</div>`}
+        </div>
+        <div class="cap">${esc(page2.differentiator.caption)}</div>
+        <div class="hl">${page2.differentiator.highlight ?? ""}</div>
+        <div class="note">${page2.differentiator.note ?? ""}</div>
+      </div>`
+          : `<div class="side-panel"><div class="eyebrow on-dark">DIFFERENTIATOR</div><div class="note" style="margin-top:0.14in; border-top:none; padding-top:0;">Data unavailable — no differentiator angle has been written up for ${esc(project.name)} yet.</div></div>`
+      }
+    </div>
+  </div>
+  <div class="footer">
+    <div>${esc(footerLeft)}</div>
+    <div class="brand">${esc(footerBrand)}</div>
+    <div class="pageno">02 / THE INVESTMENT CASE</div>
+  </div>
+</div>`;
+
+  // ---------- PAGE 3 : MASTERPLAN / DISTRICTS ----------
+  const jewelItems = (page3.jewels?.names || [])
+    .map((name) => `<div class="jewel-item">${ICONS.pin({ color: "#b5893a", size: 15, sw: 1.7 })} ${esc(name)}</div>`)
+    .join("");
+
+  const districtCards = (page3.district_cards || [])
+    .map((c) => `<div class="district-card"><h4>${esc(c.name)}</h4><p>${esc(c.body)}</p></div>`)
+    .join("");
+
+  const aroundItems = (page3.getting_around?.list || [])
+    .map(
+      (a) => `
+      <div class="around-item">
+        <div class="badge">${ICONS[a.icon]?.({ color: "#13213b", size: 18, sw: 1.6 }) ?? ""}</div>
+        <div><div class="num">${esc(a.value)}</div><div class="lbl">${esc(a.label)}</div></div>
+      </div>`
+    )
+    .join("");
+
+  const page3Html = `
+<div class="page p3">
+  <div class="p3-hero">
+    ${page3.hero_image ? `<img src="${esc(page3.hero_image)}">` : ""}
+    <div class="scrim"></div>
+    <div class="inner">
+      <div class="eyebrow">${esc(page3.hero_subhead)}</div>
+      <h1>${esc(page3.hero_headline) || `${esc(project.name)} — district information pending`}</h1>
+    </div>
+    <div class="brandmark">
+      <div class="dot">${esc(footerBrand).charAt(0).toUpperCase()}</div>
+      ${esc(footerBrand)}
+    </div>
+  </div>
+  <div class="p3-body">
+    <div class="cols">
+      <div class="col-map">
+        <div class="map-img">
+          ${page3.map_image ? `<img src="${esc(page3.map_image)}">` : ph("masterplan / district map")}
+        </div>
+        <div class="districts-title">${esc(page3.districts_title)}</div>
+        <div class="districts-body">${esc(page3.districts_body)}</div>
+        <div class="live-today">${page3.live_today ?? ""}</div>
+        <div class="note-gold">${esc(page3.note)}</div>
+      </div>
+      <div class="col-jewels">
+        <div class="eyebrow">${esc(page3.jewels?.eyebrow) || "THE CITY JEWELS"}</div>
+        <div class="jewels-intro">${esc(page3.jewels?.intro)}</div>
+        ${jewelItems ? `<div class="jewels-grid">${jewelItems}</div>` : `<div style="font-size:8.6pt; color:var(--ink-faint); font-style:italic; margin-top:0.14in;">Data unavailable — district amenity list not yet compiled.</div>`}
+      </div>
+    </div>
+    <div class="district-cards">${districtCards || `<div style="font-size:8pt; color:var(--ink-faint); font-style:italic; padding:0.1in 0;">Data unavailable — sub-district profiles not yet compiled for ${esc(project.name)}.</div>`}</div>
+    <div class="around-title">GETTING AROUND THE CLUSTER</div>
+    <div class="around-row">${aroundItems || `<div style="font-size:8pt; color:var(--ink-faint); font-style:italic;">Data unavailable — infrastructure stats not yet compiled.</div>`}</div>
+    <div class="around-caption">${esc(page3.getting_around?.caption)}</div>
+  </div>
+  <div class="footer">
+    <div>${esc(footerLeft)}</div>
+    <div class="brand">${esc(footerBrand)}</div>
+    <div class="pageno">03 / THE DISTRICTS</div>
+  </div>
+</div>`;
+
+  // ---------- PAGE 4 : COMPARABLES ----------
+  const unitMetrics = computeUnitMetrics(page2.unit_table);
+  const bestUnit = computeBestUnit(page2.unit_table);
+
+  const compRows = (page4.comparison_table || [])
+    .map((r) => `<tr><td>${esc(r.segment)}</td><td class="num">${esc(r.value)}</td><td>${esc(r.vs)}</td></tr>`)
+    .join("");
+
+  const oppStats = (page4.opportunity?.stats || [])
+    .map((s) => `<div class="opp-stat"><div class="num">${esc(s.value)}</div><div class="body">${esc(s.body)}</div></div>`)
+    .join("");
+
+  // Bars: use explicit page4.bars if the project data supplies them,
+  // otherwise compute AED/sq ft per unit type directly from the unit
+  // table so this works for any project without hand-authored bars.
+  const bars =
+    page4.bars && page4.bars.length
+      ? page4.bars
+      : unitMetrics
+          .filter((m) => m.psf)
+          .map((m) => ({ label: m.type, value: Math.round(m.psf), display: Math.round(m.psf).toLocaleString() }));
+
+  // Best-value callout: a CALCULATED conclusion, kept visually and
+  // textually distinct from the curated "opportunity" commentary
+  // (which is sourced/researched narrative, not a formula's output).
+  const bestValueBlock = bestUnit.winner
+    ? `
+      <div class="calc-block">
+        <div class="calc-label">CALCULATED &middot; BEST RELATIVE VALUE</div>
+        <div class="calc-headline">${esc(bestUnit.winner.type)}</div>
+        <div class="calc-sub">${bestUnit.winner.psfDisplay}/sq ft avg &middot; ${bestUnit.winner.size ? Math.round(bestUnit.winner.size).toLocaleString() + " sq ft avg" : ""}</div>
+        <div class="calc-note">Scored on price/sq ft, average size, and entry price across this project's own unit types (weights: psf ${Math.round(bestUnit.weights.psf * 100)}%, size ${Math.round(bestUnit.weights.size * 100)}%, entry price ${Math.round(bestUnit.weights.entryPrice * 100)}%). This is a relative comparison within ${esc(project.name)} only — not a comparison against other projects, and not a promise of resale performance.</div>
+      </div>`
+    : "";
+
+  const page4Html = `
+<div class="page p4">
+  <div class="headline">${esc(page4.headline)}</div>
+  <div class="subhead">${esc(page4.subhead)}</div>
+  <div class="body">
+    <div class="col-left">
+      ${
+        page4.comparison_table
+          ? `<table class="comp-table">
+        <colgroup><col style="width:46%"><col style="width:24%"><col style="width:30%"></colgroup>
+        <thead><tr><th>Segment</th><th>AED / sq ft</th><th>vs ${esc(project.name)}</th></tr></thead>
+        <tbody>
+          ${compRows}
+          ${
+            page4.highlight_row
+              ? `<tr class="hi">
+            <td>${esc(page4.highlight_row.segment)}</td>
+            <td class="num val">${esc(page4.highlight_row.value)}</td>
+            <td>${esc(page4.highlight_row.vs)}</td>
+          </tr>`
+              : ""
+          }
+        </tbody>
+      </table>
+      <div class="table-note">${esc(page4.table_note)}</div>`
+          : `<div class="ph" style="height:1.4in;">[ Data unavailable: no district/market comparison data supplied for this project yet ]</div>`
+      }
+      <div class="bar-title">${esc(page4.bar_title) || `${esc(project.name).toUpperCase()} — AED / SQ FT BY UNIT TYPE`}</div>
+      <div class="bar-chart">${bars.length ? barH(bars, { width: 566, rowH: 34 }) : ""}</div>
+      ${bestValueBlock}
+    </div>
+    <div class="col-right">
+      ${
+        page4.opportunity
+          ? `<div class="opp-panel">
+        <div class="eyebrow">${esc(page4.opportunity.eyebrow)}</div>
+        ${oppStats}
+        <hr class="opp-rule">
+        <div class="opp-note">${page4.opportunity.note ?? ""}</div>
+      </div>`
+          : `<div class="opp-panel"><div class="eyebrow">THE OPPORTUNITY</div><div class="opp-note" style="margin-top:0.14in;">Data unavailable — no researched market-opportunity commentary has been compiled for ${esc(project.name)} yet.</div></div>`
+      }
+    </div>
+  </div>
+  <div class="footer">
+    <div>${esc(footerLeft)}</div>
+    <div class="brand">${esc(footerBrand)}</div>
+    <div class="pageno">04 / COMPARABLES</div>
+  </div>
+</div>`;
+
+  // ---------- PAGE 5 : LOCATION & LIFESTYLE ----------
+  const mallStats = (page5.mall_stats || [])
+    .map((s) => `<div class="stat"><div class="val">${esc(s.value)}</div><div class="lbl">${esc(s.label)}</div></div>`)
+    .join("");
+
+  const nearbyItems = (page5.nearby_stats || [])
+    .map(
+      (n) => `
+      <div class="nearby-item">
+        <div class="badge">${ICONS[n.icon]?.({ color: "#13213b", size: 16, sw: 1.6 }) ?? ""}</div>
+        <div class="txt"><b>${esc(n.value)}</b> ${esc(n.label)}</div>
+      </div>`
+    )
+    .join("");
+
+  const page5Html = `
+<div class="page p5">
+  <div class="headline">${esc(page5.headline)}</div>
+  <div class="subhead">${esc(page5.subhead)}</div>
+  <div class="hero-imgs">
+    <div class="mall-col">
+      <div class="mall-img">
+        ${page5.mall_image ? `<img src="${esc(page5.mall_image)}">` : ph("landmark / amenity photo")}
+        <div class="cap">${esc(page5.mall_caption)}</div>
+      </div>
+      <div class="mall-stats">${mallStats}</div>
+    </div>
+    <div class="map-col">
+      <div class="map-img">
+        ${page5.location_map_image ? `<img src="${esc(page5.location_map_image)}">` : ph("location map")}
+      </div>
+      <div class="map-caption">${esc(page5.location_caption)}</div>
+    </div>
+  </div>
+  <div class="bottom-band">
+    <div class="nearby-panel">${nearbyItems}</div>
+    <div class="contact-card">
+      <div class="avatar"><img src="${esc(agent.photo)}"></div>
+      <div class="name">${esc(agent.name)}</div>
+      <div class="sub">${esc(footerBrand)} &middot; ${esc(agent.handle)}</div>
+    </div>
+  </div>
+  <div class="footer">
+    <div>${esc(footerLeft)}</div>
+    <div class="brand">${esc(footerBrand)}</div>
+    <div class="pageno">05 / LOCATION &amp; LIFESTYLE</div>
+  </div>
+</div>`;
+
+  // ---------- PAGE 6 : INVESTMENT RETURNS (optional — only when the
+  // project has real yield/appreciation modeling behind it; unlike the
+  // other pages, a placeholder "data unavailable" version of a returns
+  // page isn't useful, so this page is simply omitted when absent) ----------
+  let page6Html = "";
+  if (data.page6) {
+    const page6 = data.page6;
+    const yieldRows = (page6.yield_table || [])
+      .map((r) => `<tr class="${r.highlight ? "hi" : ""}"><td>${esc(r.segment)}</td><td class="num">${esc(r.yield)}</td></tr>`)
+      .join("");
+    const scenarioCards = (page6.appreciation_scenarios || [])
+      .map(
+        (s) => `
+        <div class="scenario-card ${s.highlight ? "hi" : ""}">
+          <div class="lbl">${esc(s.label)}</div>
+          <div class="cagr">${esc(s.cagr)}</div>
+          <div class="val">${esc(s.value)}</div>
+          <div class="gain">${esc(s.gain)}</div>
+        </div>`
+      )
+      .join("");
+    const exitRows = (page6.exit_case?.rows || [])
+      .map((r) => `<div class="exit-row ${r.highlight ? "hi" : ""}"><div class="k">${esc(r.label)}</div><div class="v">${esc(r.value)}</div></div>`)
+      .join("");
+
+    page6Html = `
+<div class="page p6">
+  <div class="headline">${esc(page6.headline)}</div>
+  <div class="subhead">${esc(page6.subhead)}</div>
+  <div class="body">
+    <div class="col-left">
+      <table class="yield-table">
+        <colgroup><col style="width:60%"><col style="width:40%"></colgroup>
+        <thead><tr><th>Segment</th><th class="num">Gross rental yield</th></tr></thead>
+        <tbody>${yieldRows}</tbody>
+      </table>
+      <div class="yield-note">${esc(page6.yield_note)}</div>
+
+      <div class="scenario-title">${esc(page6.appreciation_title)}</div>
+      <div class="scenario-cards">${scenarioCards}</div>
+      <div class="appreciation-note">${esc(page6.appreciation_note)}</div>
+    </div>
+    <div class="col-right">
+      <div class="exit-panel">
+        <div class="eyebrow on-dark">${esc(page6.exit_case?.eyebrow)}</div>
+        <div class="title">${esc(page6.exit_case?.title)}</div>
+        ${exitRows}
+        <div class="exit-note">${page6.exit_case?.note ?? ""}</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div>${esc(footerLeft)}</div>
+    <div class="brand">${esc(footerBrand)}</div>
+    <div class="pageno">06 / INVESTMENT RETURNS</div>
+  </div>
+</div>`;
+  }
+
+  return page1 + page2Html + page3Html + page4Html + page5Html + page6Html;
+}
+
+if (typeof module !== "undefined") module.exports = { renderDeck, validateProjectData };
+
+</script>
+<script>
+const PROJECT_STORE = {
+  valia: { label: "Valia — Dubai Creek Harbour", data: {
+  "agent": {
+    "name": "Khalisa",
+    "handle": "@taisio",
+    "photo": "../data/placeholder_avatar.png"
+  },
+  "watermark": "@taisio",
+  "footer_left": "VALIA · DUBAI CREEK HARBOUR · EMAAR",
+  "footer_brand": "Taisio",
+  "project": {
+    "tag": "NEW LAUNCH · EMAAR",
+    "name": "Valia",
+    "location": "Dubai Creek Harbour",
+    "district": "Ghaf District · Plot SW09",
+    "hero_image": null,
+    "starting_price": "AED 1.97 Million",
+    "stats": [
+      {
+        "icon": "layers",
+        "value": "491",
+        "label": "Total residences across 1, 2, 3 & 4-bedroom collections"
+      },
+      {
+        "icon": "building",
+        "value": "221.4m",
+        "label": "Tower height · 55 storeys across 3 tiers"
+      },
+      {
+        "icon": "metro",
+        "value": "2 Metro Stations",
+        "label": "Serving the district, moments from the Iconic Station"
+      },
+      {
+        "icon": "calendar",
+        "value": "Q4 2030",
+        "label": "Estimated completion · 8-instalment payment plan"
+      }
+    ]
+  },
+  "page2": {
+    "headline": "Built Bigger. Finished Better.",
+    "subhead": "Unit mix, launch pricing, and the differentiator behind Valia",
+    "unit_table": [
+      {
+        "type": "1 Bedroom",
+        "starred": false,
+        "units": 245,
+        "size": "817 – 829",
+        "starting": "AED 1.97M",
+        "average": "AED 2.14M",
+        "max": "AED 2.38M",
+        "avgPriceNum": 2140000,
+        "sizeAvgNum": 823
+      },
+      {
+        "type": "2 Bedroom — ensuite",
+        "starred": true,
+        "units": 208,
+        "size": "1,242 – 1,258",
+        "starting": "AED 2.81M",
+        "average": "AED 3.19M",
+        "max": "AED 3.53M",
+        "avgPriceNum": 3190000,
+        "sizeAvgNum": 1255
+      },
+      {
+        "type": "3 Bedroom",
+        "starred": false,
+        "units": 32,
+        "size": "1,652 – 1,694",
+        "starting": "AED 4.10M",
+        "average": "AED 4.41M",
+        "max": "AED 4.56M",
+        "avgPriceNum": 4410000,
+        "sizeAvgNum": 1673
+      },
+      {
+        "type": "4BR Boutique Penthouse",
+        "starred": false,
+        "units": 6,
+        "size": "2,561",
+        "starting": "AED 6.97M",
+        "average": "AED 7.05M",
+        "max": "AED 7.12M",
+        "avgPriceNum": 7050000,
+        "sizeAvgNum": 2561
+      }
+    ],
+    "table_foot": "491 Total Residences · Launch pricing, subject to availability",
+    "payment_plan": [
+      {
+        "pct": 10,
+        "when": "Booking"
+      },
+      {
+        "pct": 10,
+        "when": "Nov '26"
+      },
+      {
+        "pct": 10,
+        "when": "Jun '27"
+      },
+      {
+        "pct": 10,
+        "when": "Dec '27"
+      },
+      {
+        "pct": 10,
+        "when": "Jun '28"
+      },
+      {
+        "pct": 10,
+        "when": "Oct '28*"
+      },
+      {
+        "pct": 10,
+        "when": "Mar '29*"
+      },
+      {
+        "pct": 10,
+        "when": "Sep '29*"
+      },
+      {
+        "pct": 20,
+        "when": "Dec '30*",
+        "final": true
+      }
+    ],
+    "payment_note": "*Instalments 6–9 tied to construction milestones (40% / 60% / 80% / 100% completion)",
+    "market_metric": {
+      "value": "AED 50.3 Bn",
+      "label": "Total Emaar property sales, Jan–Jul '26 · Source: PropertyMonitor.com"
+    },
+    "price_trend": {
+      "title": "Dubai Creek Harbour · AED / sq ft",
+      "points": [
+        {
+          "label": "2020",
+          "value": 1530
+        },
+        {
+          "label": "2022",
+          "value": 1830
+        },
+        {
+          "label": "2025",
+          "value": 2470
+        },
+        {
+          "label": "2026 YTD",
+          "value": 2639
+        }
+      ]
+    },
+    "differentiator": {
+      "eyebrow": "THE ENSUITE ADVANTAGE",
+      "title": "Every 2-bedroom, both bedrooms ensuite",
+      "image": null,
+      "caption": "2-Bedroom layout — master and second bedroom each with a private bathroom",
+      "highlight": "Out of Emaar's last 50 project launches, only three or four towers have offered fully ensuite 2-bedroom layouts. <b>Valia is one of them.</b>",
+      "note": "<b>Generously sized:</b> at 1,255 sq ft average, Valia's 2-bedrooms sit well above the compact, single-ensuite layouts common across recent Dubai Creek Harbour launches."
+    }
+  },
+  "page3": {
+    "hero_subhead": "DUBAI CREEK HARBOUR MASTERPLAN",
+    "hero_headline": "A New Urban Node, Shifting Dubai's Gravity Back to the Creek",
+    "hero_image": null,
+    "map_image": null,
+    "districts_title": "Ten Districts. One Address.",
+    "districts_body": "Each district carries its own identity, centre and open space — from G+2 community buildings to G+80 landmark towers around the central Icon.",
+    "live_today": "<b>Live today:</b> Creek Island · Creek Beach · Greengate",
+    "note": "70% of the masterplan is still to be built",
+    "jewels": {
+      "eyebrow": "THE CITY JEWELS",
+      "intro": "A 7km self-shaded Discovery Loop threads the masterplan together, linking nine lifestyle nodes — gardens, plazas and district centres designed as destinations in their own right.",
+      "names": [
+        "Green Gate",
+        "Palm Axis",
+        "The Lake",
+        "Ravine Plaza",
+        "Estuary Plaza",
+        "The Pearl",
+        "Sanctuary Walk",
+        "Cloud Gate",
+        "Icon Plaza"
+      ]
+    },
+    "district_cards": [
+      {
+        "name": "CREEK ISLAND",
+        "body": "Valia's home district. The masterplan's central island, anchored by Icon Plaza and the incoming Dubai Square Mall."
+      },
+      {
+        "name": "CREEK BEACH",
+        "body": "The southern waterfront district — 600m urban beach, marina promenade, and completed dining strip."
+      },
+      {
+        "name": "GREENGATE",
+        "body": "The northern gateway district — direct link to Ras Al Khor and the wider Dubai road network."
+      }
+    ],
+    "getting_around": {
+      "list": [
+        {
+          "icon": "bike",
+          "value": "35km",
+          "label": "Dedicated cycling lanes"
+        },
+        {
+          "icon": "walk",
+          "value": "7km",
+          "label": "Self-shaded walking loop"
+        },
+        {
+          "icon": "tree",
+          "value": "15",
+          "label": "Parks across the masterplan"
+        },
+        {
+          "icon": "grad_cap",
+          "value": "7",
+          "label": "Schools within the masterplan"
+        }
+      ],
+      "caption": "Masterplan-wide infrastructure that directly serves Creek Island and the Ghaf District."
+    }
+  },
+  "page4": {
+    "headline": "How Valia Prices Against the Market",
+    "subhead": "Price per square foot — Valia vs Dubai Creek Harbour vs Downtown Dubai",
+    "comparison_table": [
+      {
+        "segment": "Dubai Creek Harbour — masterplan average",
+        "value": "2,400 – 2,500",
+        "vs": "Valia priced above"
+      },
+      {
+        "segment": "Creek Island / Island District (Valia's district)",
+        "value": "2,400 – 3,200",
+        "vs": "Valia mid-range"
+      },
+      {
+        "segment": "Downtown Dubai — comparable Emaar product",
+        "value": "2,800 – 3,200",
+        "vs": "Valia priced below"
+      }
+    ],
+    "highlight_row": {
+      "segment": "VALIA — blended launch pricing",
+      "value": "~2,585",
+      "vs": "Mid-district"
+    },
+    "table_note": "Based on aggregated public market data (2026); Valia figures computed from official launch pricing across all unit types.",
+    "bar_title": "VALIA — AED / SQ FT BY UNIT TYPE",
+    "bars": [
+      {
+        "label": "1 Bedroom",
+        "value": 2600,
+        "display": "2,600"
+      },
+      {
+        "label": "2 Bedroom",
+        "value": 2552,
+        "display": "2,552",
+        "highlight": true
+      },
+      {
+        "label": "3 Bedroom",
+        "value": 2636,
+        "display": "2,636"
+      },
+      {
+        "label": "4BR Penthouse",
+        "value": 2753,
+        "display": "2,753"
+      }
+    ],
+    "opportunity": {
+      "eyebrow": "THE OPPORTUNITY",
+      "stats": [
+        {
+          "value": "25–35%",
+          "body": "The discount Dubai Creek Harbour still trades at versus comparable Downtown Dubai product from the same developer, 3km away."
+        },
+        {
+          "value": "35–50%",
+          "body": "Price-per-sq-ft growth across Dubai Creek Harbour since 2019–2020 launches (AED 1,400–1,600) to current releases (AED 1,900–2,400+)."
+        }
+      ],
+      "note": "<b>The pattern:</b> pricing discounts on emerging districts historically don't survive the arrival of infrastructure. The creek promenade, marina and central park are already open — Dubai Square and the Blue Line Metro are next."
+    }
+  },
+  "page5": {
+    "headline": "Steps From Dubai Square — The Catalyst District",
+    "subhead": "The world's first drive-through mall, and exactly where Valia sits within it",
+    "mall_image": null,
+    "mall_caption": "Dubai Square Mall — World's First Drive-Through Mall",
+    "location_map_image": null,
+    "location_caption": "15 min to Burj Khalifa & Downtown · 10 min to Dubai Intl Airport",
+    "mall_stats": [
+      {
+        "value": "AED 180Bn",
+        "label": "development budget"
+      },
+      {
+        "value": "~2028",
+        "label": "projected opening"
+      },
+      {
+        "value": "Multi",
+        "label": "entrances, opens onto Icon Plaza"
+      }
+    ],
+    "nearby_stats": [
+      {
+        "icon": "metro",
+        "value": "2",
+        "label": "Metro Stations serving the district"
+      },
+      {
+        "icon": "walk",
+        "value": "5 min",
+        "label": "Walk from Valia to Icon Plaza (400m)"
+      },
+      {
+        "icon": "walk",
+        "value": "2 min",
+        "label": "Walk from Valia to Dubai Square (100m)"
+      },
+      {
+        "icon": "tree",
+        "value": "3",
+        "label": "Parks within the Ghaf District"
+      },
+      {
+        "icon": "hotel",
+        "value": "4",
+        "label": "Hotels within walking distance"
+      }
+    ]
+  },
+  "page6": {
+    "headline": "The Returns Case",
+    "subhead": "Illustrative rental yield and capital appreciation modeling for Valia's 2-bedroom collection",
+    "yield_table": [
+      {
+        "segment": "Dubai Creek Harbour — area average",
+        "yield": "6.2% – 6.8%"
+      },
+      {
+        "segment": "Valia — estimated (2BR)",
+        "yield": "6.5% – 7.1%",
+        "highlight": true
+      },
+      {
+        "segment": "Downtown Dubai — comparable product",
+        "yield": "4.8% – 5.5%"
+      }
+    ],
+    "yield_note": "Gross yield estimates based on comparable Dubai Creek Harbour and Downtown rental listings, 2026. Actual yield depends on unit, furnishing, and tenancy terms.",
+    "appreciation_title": "5-YEAR VALUE SCENARIO — 2BR AVERAGE (AED 3.19M)",
+    "appreciation_scenarios": [
+      {
+        "label": "Conservative",
+        "cagr": "4%/yr",
+        "value": "AED 3.88M",
+        "gain": "+AED 0.69M"
+      },
+      {
+        "label": "Base case",
+        "cagr": "7%/yr",
+        "value": "AED 4.47M",
+        "gain": "+AED 1.28M",
+        "highlight": true
+      },
+      {
+        "label": "Optimistic",
+        "cagr": "10%/yr",
+        "value": "AED 5.14M",
+        "gain": "+AED 1.95M"
+      }
+    ],
+    "appreciation_note": "Scenarios modeled off Dubai Creek Harbour's 2020–2026 realized price/sq ft growth (35–50% cumulative, see page 4). Not a forecast or guarantee — Dubai off-plan markets are cyclical.",
+    "exit_case": {
+      "eyebrow": "THE EXIT MATH",
+      "title": "A base-case scenario, worked through",
+      "rows": [
+        {
+          "label": "Entry price (2BR average)",
+          "value": "AED 3.19M"
+        },
+        {
+          "label": "Total paid by handover (8 instalments)",
+          "value": "AED 3.19M"
+        },
+        {
+          "label": "Projected value at handover (base case)",
+          "value": "AED 4.47M"
+        },
+        {
+          "label": "Estimated gross capital gain",
+          "value": "AED 1.28M",
+          "highlight": true
+        },
+        {
+          "label": "Approx. gain on capital deployed",
+          "value": "~40%",
+          "highlight": true
+        }
+      ],
+      "note": "<b>This is a modeled scenario, not a promise.</b> It assumes the base-case appreciation rate holds, ignores transaction costs, service charges, and financing costs, and doesn't account for market downturns. Run your own numbers — and a client's — before using this in a pitch."
+    }
+  }
+} },
+  farm_gardens: { label: "Farm Gardens — The Valley (data incomplete)", data: {
+  "_note": "Deliberately incomplete. Only fields directly stated on the Pipeline tab's Farm Gardens card are filled in — everything else is left absent so the renderer's 'data unavailable' fallbacks and the validator's warnings are demonstrated honestly, not staged. Fill in real figures as they're researched.",
+
+  "agent": {
+    "name": "Khalisa",
+    "handle": "@taisio",
+    "photo": "placeholder_avatar.png"
+  },
+  "watermark": "@taisio",
+  "footer_left": "FARM GARDENS \u00b7 THE VALLEY \u00b7 EMAAR",
+  "footer_brand": "Taisio",
+
+  "project": {
+    "tag": "NEW LAUNCH \u00b7 EMAAR",
+    "name": "Farm Gardens",
+    "location": "The Valley",
+    "district": "Farm Gardens District",
+    "hero_image": null,
+    "starting_price": "TBC \u2014 pricing not yet published",
+    "stats": [
+      {"icon": "layers", "value": "Villas", "label": "Low-density, nature-led villa collection"},
+      {"icon": "heart", "value": "Family-end-user", "label": "Limited supply, positioned for owner-occupiers"},
+      {"icon": "building", "value": "The Valley", "label": "Extension of Emaar's existing Valley masterplan"}
+    ]
+  },
+
+  "page2": {
+    "headline": "Farm Gardens \u2014 Unit Mix",
+    "subhead": "Villa collection, pricing pending developer confirmation",
+    "unit_table": [
+      {"type": "3 Bedroom Villa", "starred": false, "units": null, "size": "TBC", "starting": "TBC", "average": "TBC", "max": "TBC"},
+      {"type": "4 Bedroom Villa", "starred": false, "units": null, "size": "TBC", "starting": "TBC", "average": "TBC", "max": "TBC"},
+      {"type": "5 Bedroom Villa", "starred": false, "units": null, "size": "TBC", "starting": "TBC", "average": "TBC", "max": "TBC"}
+    ],
+    "table_foot": "Unit count and pricing pending official launch pricing from Emaar.",
+    "payment_plan": [],
+    "payment_note": "Payment plan not yet published for this launch.",
+    "market_metric": null,
+    "price_trend": { "title": "The Valley \u00b7 AED / sq ft", "points": [] }
+  },
+
+  "page3": {
+    "hero_subhead": "THE VALLEY MASTERPLAN",
+    "hero_headline": "A nature-led extension of an established Emaar community",
+    "hero_image": null,
+    "map_image": null,
+    "districts_title": "Farm Gardens",
+    "districts_body": "Nature-led villa extension of The Valley masterplan \u2014 limited supply, family-end-user demand.",
+    "live_today": "",
+    "note": "",
+    "jewels": { "eyebrow": "THE CITY JEWELS", "intro": "", "names": [] },
+    "district_cards": [],
+    "getting_around": { "list": [], "caption": "" }
+  },
+
+  "page4": {
+    "headline": "How Farm Gardens Prices Against the Market",
+    "subhead": "Market comparison pending official launch pricing"
+  },
+
+  "page5": {
+    "headline": "Location & Lifestyle",
+    "subhead": "Detail pending \u2014 The Valley masterplan information not yet compiled for this report",
+    "mall_image": null,
+    "mall_caption": "",
+    "location_map_image": null,
+    "location_caption": "",
+    "mall_stats": [],
+    "nearby_stats": []
+  }
+}
+ },
+};
+
+async function getProjects() {
+  return Object.entries(PROJECT_STORE).map(([id, p]) => ({ id, label: p.label }));
+}
+async function getProject(id) {
+  return PROJECT_STORE[id]?.data ?? null;
+}
+
+async function initProjectReport() {
+  const projects = await getProjects();
+  const select = document.getElementById('report-project-select');
+  select.innerHTML = projects.map(p => `<option value="${p.id}">${p.label}</option>`).join('');
+  select.addEventListener('change', (e) => renderReport(e.target.value));
+  renderReport(projects[0].id);
+}
+
+async function renderReport(key) {
+  const data = await getProject(key);
+  if (!data) return;
+  const { warnings } = validateProjectData(data);
+  const box = document.getElementById('report-warning');
+  if (warnings.length) {
+    box.innerHTML = `<b>Data quality — ${warnings.length} issue${warnings.length > 1 ? 's' : ''}:</b><ul>${warnings.map(w => `<li>${w}</li>`).join('')}</ul>`;
+    box.classList.add('show');
+  } else {
+    box.classList.remove('show'); box.innerHTML = '';
+  }
+  document.getElementById('deck-report').innerHTML = renderDeck(data);
+}
+
+initProjectReport();
+</script>
+
+</body>
+</html>
