@@ -91,7 +91,6 @@ body { margin: 0; background: #d9d9d9; font-family: -apple-system, sans-serif; }
   letter-spacing: 0.4px;
   background: var(--paper);
 }
-#deck-report .footer .brand { display: flex; align-items: center; gap: 6px; font-weight: 600; color: var(--ink-soft); }
 #deck-report .footer .pageno { font-weight: 600; letter-spacing: 1px; }
 
 #deck-report img.ph, #deck-report div.ph {
@@ -135,12 +134,6 @@ body { margin: 0; background: #d9d9d9; font-family: -apple-system, sans-serif; }
   white-space: nowrap; letter-spacing: 1px;
 }
 #deck-report .presented-by { display: flex; align-items: center; gap: 0.15in; margin-bottom: 0.2in; }
-#deck-report .presented-by .avatar {
-  width: 0.56in; height: 0.56in; border-radius: 999px; overflow: hidden;
-  border: 2px solid var(--gold); flex-shrink: 0; background: var(--navy-800);
-}
-#deck-report .presented-by .avatar img { width: 100%; height: 100%; object-fit: cover; }
-#deck-report .presented-by .meta .label { font-size: 7.3pt; letter-spacing: 1.6px; color: #9fb0c4; text-transform: uppercase; font-weight: 600; }
 #deck-report .presented-by .meta .name { font-size: 13.5pt; font-weight: 700; margin-top: 1px; }
 #deck-report .presented-by .meta .handle { font-size: 8.8pt; color: var(--gold); font-weight: 600; display:flex; align-items:center; gap:5px; margin-top: 1px;}
 #deck-report .cover hr.rule { border: none; border-top: 1px solid rgba(255,255,255,0.16); margin: 0.16in 0; }
@@ -217,14 +210,6 @@ body { margin: 0; background: #d9d9d9; font-family: -apple-system, sans-serif; }
 #deck-report .p3-hero .inner { position:relative; z-index:2; max-width: 9in; }
 #deck-report .p3-hero .eyebrow { color: #cfd8e3; }
 #deck-report .p3-hero h1 { font-family:'Playfair Display'; font-weight:700; font-size: 21pt; line-height:1.28; margin-top: 0.06in; }
-#deck-report .p3-hero .brandmark {
-  position:absolute; top:0.26in; right:0.5in; z-index:2;
-  display:flex; align-items:center; gap:0.08in; color:#fff; font-weight:700; font-size:9.5pt;
-}
-#deck-report .p3-hero .brandmark .dot {
-  width:0.28in; height:0.28in; border-radius:5px; background: var(--gold);
-  display:flex; align-items:center; justify-content:center; color: var(--navy-950); font-family:'Playfair Display'; font-weight:700; font-size:11pt;
-}
 
 #deck-report .p3-body { padding: 0.2in 0.5in 0 0.5in; }
 #deck-report .p3 .cols { display:flex; gap: 0.4in; }
@@ -322,10 +307,7 @@ body { margin: 0; background: #d9d9d9; font-family: -apple-system, sans-serif; }
   display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
   padding: 0.2in;
 }
-#deck-report .p5 .contact-card .avatar { width:0.75in; height:0.75in; border-radius:999px; overflow:hidden; border:2px solid var(--gold); background: var(--navy-800); }
-#deck-report .p5 .contact-card .avatar img { width:100%; height:100%; object-fit:cover; }
-#deck-report .p5 .contact-card .name { font-weight:800; font-size: 11.5pt; color: var(--navy-950); margin-top: 0.1in; }
-#deck-report .p5 .contact-card .sub { font-size: 8.4pt; color: var(--ink-soft); margin-top: 0.03in; }
+#deck-report .p5 .contact-card .name { font-weight:800; font-size: 11.5pt; color: var(--navy-950); margin-top: 0; }
 
 /* ===== Page 6 — Investment Returns ===== */
 #deck-report .p6 { padding: 0.42in 0.5in 0 0.5in; }
@@ -693,7 +675,6 @@ function esc(s) {
 function renderDeck(data) {
   const { agent, project, page2, page3, page4, page5 } = data;
   const footerLeft = data.footer_left;
-  const footerBrand = data.footer_brand;
   const watermark = data.watermark;
 
   const ph = (label, extraStyle = "") =>
@@ -717,9 +698,7 @@ function renderDeck(data) {
 <div class="page cover">
   <div class="sidebar">
     <div class="presented-by">
-      <div class="avatar"><img src="${esc(agent.photo)}"></div>
       <div class="meta">
-        <div class="label">Presented by</div>
         <div class="name">${esc(agent.name)}</div>
         <div class="handle">${esc(agent.handle)}</div>
       </div>
@@ -742,7 +721,6 @@ function renderDeck(data) {
   </div>
   <div class="footer">
     <div>${esc(footerLeft)}</div>
-    <div class="brand">${esc(footerBrand)}</div>
     <div class="pageno">01 / LAUNCH OVERVIEW</div>
   </div>
 </div>`;
@@ -829,7 +807,6 @@ function renderDeck(data) {
   </div>
   <div class="footer">
     <div>${esc(footerLeft)}</div>
-    <div class="brand">${esc(footerBrand)}</div>
     <div class="pageno">02 / THE INVESTMENT CASE</div>
   </div>
 </div>`;
@@ -862,10 +839,6 @@ function renderDeck(data) {
       <div class="eyebrow">${esc(page3.hero_subhead)}</div>
       <h1>${esc(page3.hero_headline) || `${esc(project.name)} — district information pending`}</h1>
     </div>
-    <div class="brandmark">
-      <div class="dot">${esc(footerBrand).charAt(0).toUpperCase()}</div>
-      ${esc(footerBrand)}
-    </div>
   </div>
   <div class="p3-body">
     <div class="cols">
@@ -891,7 +864,6 @@ function renderDeck(data) {
   </div>
   <div class="footer">
     <div>${esc(footerLeft)}</div>
-    <div class="brand">${esc(footerBrand)}</div>
     <div class="pageno">03 / THE DISTRICTS</div>
   </div>
 </div>`;
@@ -977,7 +949,6 @@ function renderDeck(data) {
   </div>
   <div class="footer">
     <div>${esc(footerLeft)}</div>
-    <div class="brand">${esc(footerBrand)}</div>
     <div class="pageno">04 / COMPARABLES</div>
   </div>
 </div>`;
@@ -1019,14 +990,12 @@ function renderDeck(data) {
   <div class="bottom-band">
     <div class="nearby-panel">${nearbyItems}</div>
     <div class="contact-card">
-      <div class="avatar"><img src="${esc(agent.photo)}"></div>
       <div class="name">${esc(agent.name)}</div>
-      <div class="sub">${esc(footerBrand)} &middot; ${esc(agent.handle)}</div>
+      <div class="sub">${esc(agent.handle)}</div>
     </div>
   </div>
   <div class="footer">
     <div>${esc(footerLeft)}</div>
-    <div class="brand">${esc(footerBrand)}</div>
     <div class="pageno">05 / LOCATION &amp; LIFESTYLE</div>
   </div>
 </div>`;
@@ -1084,7 +1053,6 @@ function renderDeck(data) {
   </div>
   <div class="footer">
     <div>${esc(footerLeft)}</div>
-    <div class="brand">${esc(footerBrand)}</div>
     <div class="pageno">06 / INVESTMENT RETURNS</div>
   </div>
 </div>`;
